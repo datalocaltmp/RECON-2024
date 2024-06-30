@@ -1,6 +1,6 @@
 # RECON-2024
 
-This repository contains various examples for collecting coverage on iOS and Android
+This repository contains various examples for collecting coverage on iOS and Android. The Cartographer Ghidra extension by NCCGroup is also included as the current release is temporarily broken for Ghidra 11.1 - this version has the required patch.
 
 ## iOS Coverage
 
