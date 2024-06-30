@@ -10,8 +10,8 @@
  * as well as the exported function.
  * 
  */
-var whitelist = ["libdexfile.so"];
-var exportName = "_start_main";
+var whitelist = ["fvsa"];
+var exportName = "coverageTime";
 
 // This function takes a list of GumCompileEvents and converts it into a DRcov
 //  entry. Note that we'll get duplicated events when two traced threads
@@ -93,40 +93,6 @@ function make_maps() {
  */
 var output_file = new File("/data/local/tmp/rawcov.dat", "wb");
 
-output_file.write(Process.enumerateModules());
-
-var awaitForCondition = function (callback) {
-    var int = setInterval(function () {
-        var addr = Module.findBaseAddress('libdexfile.so');
-        if (addr) {
-            console.log("SO Address found:", addr);
-            output_file.write(addr);
-
-            clearInterval(int);
-            //callback(+addr);
-            //return;
-        }
-    }, 0);
-}
-
-awaitForCondition((baseAddr)=>{
-    console.log("STARTING HOOK ");
-
-    let xxtea_decryptaddr = Module.findExportByName('libcocos2djs.so', 'xxtea_decrypt');
-    console.log("[XXTEA FUNC ADDRESS]-> ", xxtea_decryptaddr);
-
-    Interceptor.attach(xxtea_decryptaddr, {
-        onEnter(args) {
-            console.log("[key]-> " + args[2].readCString()) // print XXTEA key 
-        },
-        onLeave: function ( retval ) {  
-            //console.log("Leaving export...")
-        }
-    });
-});
-
-
-/*
 Interceptor.attach(Module.getExportByName(null, exportName), {
     onEnter(args) {
         var maps = make_maps();
@@ -170,4 +136,3 @@ Interceptor.attach(Module.getExportByName(null, exportName), {
     onLeave(retval){
     }
 });
-*/
